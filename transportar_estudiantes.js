@@ -37,3 +37,43 @@ if(verificarRestricciones(numGrandes, numPequeños)) {
 } else {
     console.log('La combinación de autobuses no cumple con las restricciones.');
 }
+
+
+// Comprobacion maximo costo
+
+// Función para verificar las restricciones
+const verificarRestriccionesParaMaximoCosto = (numGrandes, numPequeños) => {
+    if(numGrandes + numPequeños > MAX_CONDUCTORES) {
+        return false;
+    }
+    if(estudiantesTransportados(numGrandes, numPequeños) < TOTAL_ESTUDIANTES) {
+        return false;
+    }
+    return true;
+}
+
+// Función para encontrar la combinación de autobuses que maximiza el costo
+const maximoCosto = () => {
+    let maxCost = 0;
+    let combinacion = {};
+
+    // Itera sobre todas las combinaciones posibles de autobuses
+    for(let i = 0; i <= MAX_CONDUCTORES; i++) {
+        for(let j = 0; j <= MAX_CONDUCTORES - i; j++) {
+            if(verificarRestricciones(i, j)) {
+                const costoActual = calcularCosto(i, j);
+                if(costoActual > maxCost) {
+                    maxCost = costoActual;
+                    combinacion = { grandes: i, pequeños: j };
+                }
+            }
+        }
+    }
+    return {
+        costo: maxCost,
+        ...combinacion
+    };
+}
+
+const resultado = maximoCosto();
+console.log(`La combinación que maximiza el costo utiliza ${resultado.grandes} autobuses grandes y ${resultado.pequeños} autobuses pequeños con un costo total de: $${resultado.costo}`);
